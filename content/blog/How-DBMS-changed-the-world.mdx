@@ -1,0 +1,201 @@
+---
+title: How DBMS changed the world
+description: Syntax highlighting, line numbers, line highlights, word highlights
+date: 2024-04-07
+tags: ["code","dbms","computer fundamentals"]
+published: true
+---
+# Table of Content
+
+- [Introduction](#introduction)
+- [Limitations of File System and How RDMS Solves it](#limitations-of-file-system-and-how-rdms-solves-it)
+  - [Data Redundancy and Inconsistency](#data-redundancy-and-inconsistency)
+  - [Difficulty in Accessing Data](#difficulty-in-accessing-data)
+  - [Integrity Problem](#integrity-problem)
+  - [Concurrent-Access Anomalies](#concurrent-access-anomalies)
+  - [Atomicity Problem](#atomicity-problem)
+  - [Data Isolation](#data-isolation)
+  - [Security Problems](#security-problems)
+- [Conclusion](#conclusion)
+
+## Introduction
+
+In the late 20th century, DBMS changed the world for better after the invention of relational databases in 1970 by an IBM Engineer, Edgar Codd.
+
+Before the widespread use of RDBMS, the most commonly used way to store data was a file-based system. Basically, you store your data either in physical files or digital text files. File-based systems were easy to understand and simple but not efficient, to say the least.
+
+Let’s delve into the limitations of the file-based system and how RDBMS solves it.
+
+## Limitations of File System and How RDMS Solves it
+
+To illustrate these limitations and DBMS solutions, we'll use a university scenario.
+
+### Data Redundancy and Inconsistency
+
+One of the students in the university wants to change his major from Maths to Economics.
+
+#### File Based System
+
+Suppose, the University is managing its students' records in separate text files for separate academic departments.
+
+This information needs to be manually transferred from the Maths department to the Economics department, which is error-prone and time-consuming.
+
+#### DBMS Solution
+
+In DBMS, all student details can be stored in a centralized database accessible to all authorized users across departments.
+
+Each student info is stored in structured tables, and departments can query and update this info as needed.
+
+In the case of a student switching majors from Maths to Economics, the record of the student will be updated once in the database, which ensures data consistency and removes the need for manual duplication.
+
+### Difficulty in Accessing Data
+
+Suppose the Principal got to know about a student who was engaging in illegal activity on the university campus. The Principal got angry and asked his staff members to find out who is doing this. After some investigation, they got to know the name of the student only.
+
+#### File Based System
+
+The Principal now has to coordinate with every department head to go through their files and find the details of the student using his name so that the Principal can expel that student from the university.
+
+This process of manually searching a student's name is a time-consuming process.
+
+#### DBMS Solution
+
+DBMS provides a query language (e.g., SQL) to retrieve data efficiently.
+
+The Principal can now simply type some SQL queries to find out the details of the student without navigating multiple files.
+
+### Integrity Problem
+
+The Principal asks his staff members to get the details of how many students are enrolled in each course. After a long discussion with his Professors, he decided to shut down a course. But because  the discussion took so much time, all the admin staff have left the premises. So, the Principal updates it by himself.
+
+The next day, the Principal gets tired and takes a leave, forgetting to inform the admin staff that they have shut down a course. On that day, a student arrives at the university campus to enroll in the same course that was shut down the previous day by the Principal.
+
+#### File Based System
+
+- University is storing data in separate files like
+    - student.txt - details of students, name, address etc
+    - Course.txt - details regarding courses, subjects in the course, teacher etc.
+    - enrollment.txt - details regarding which student enrolled in which course with enrollment date and grade.
+
+Now, the Admin Staff takes the fees from the student and they make an entry in the enrollment.txt mentioning that this student is enrolled in this course and student.txt where they mentioned all the details of the student.
+
+Nobody is stopping them from doing this and this leads to a data integrity issue.
+
+#### DBMS Solution
+
+- With DBMS, 3 tables can be created
+    - student
+    - course
+    - enrollment
+
+We have established a relationship between these tables like students can enroll in multiple courses etc using a foreign key.
+
+Now, if any Admin Staff tries to enroll a student and tries to make an entry in the enrollment table for a course which doesn’t exist in the course table as it was deleted by the Principal the previous day, DBMS will throw an error and not allow them to do this.
+
+This is how DBMS prevents data integrity issues.
+
+### Concurrent-Access Anomalies
+
+The university is offering a popular course in AI and ML. Many students are applying for this course.
+
+Now, only one seat is left, and two students are trying to enroll in the same seat at the same time.
+
+#### File Based System
+
+There is a chance that both of the students get enrolled with proper concurrency control.
+
+This leads to over-enrollment.
+
+#### DBMS Solution
+
+In DBMS, student enrollment in a course is a transaction. Transactions happen one after the other.
+
+So when two students try to enroll to get the last seat, the system ensures that only one student gets the seat.
+
+That is how it prevents any mistakes and keeps the data accurate and consistent.
+
+### Atomicity Problem
+
+Suppose, a student comes to the university and wants to enroll in a course. He reached the Admin room where one of the Admin Staff is registering him in a course.
+
+System Crashes!
+
+The system crashes after deducting the total seat count of the course but before updating the student’s enrollment record.
+
+#### File Based System
+
+In the File Based System, this leads to data inconsistency where the seat count is incorrect, and the student is also not enrolled in the course.
+
+#### DBMS Solution
+
+In DBMS, either both of the records - seat count and student’s enrollment record will be updated, or both rollback to the original state.
+
+In this case of system failure, DBMS will rollback to the original state where neither the seat count of the course nor the student’s enrollment record is updated, making the data consistent.
+
+### Data Isolation
+
+Suppose, a lot of Admin Staff are working on the same data.
+
+For example, let’s call the task as a transaction, and these two transactions are happening simultaneously.
+
+- Transaction A - Enrolling in a course.
+- Transaction B - Checking the number of available seats.
+
+#### File Based System
+
+If Transaction A and B are happening at the same time. Transaction B might show the wrong number of available seats to the Admin Staff.
+
+#### DBMS Solution
+
+Data Isolation is like putting a Shield around each task so that they don’t mess with each other. This keeps the data consistent as only one is working on it.
+
+If one Admin Staff is registering a student for a course, we don’t want another Admin Staff checking the available seats before the first Admin Staff finishes registering. That’s where data isolation comes in. It makes sure that no one sees a half-done task.
+
+**How DBMS is doing data isolation -**
+
+- **Locks** - Think of locks as little signs that say “Hey! I am working on this part of the database, so no one will touch it unless I am Done”.
+- **Concurrency Control** - Like a traffic Cop of the Tasks. Ensure only one task is happening at a given time.
+- **Isolation Levels** - Isolation levels in DBMS define how much transactions can "interfere" with each other's data. **Types of Isolation Levels are** -
+    - **Read Uncommitted**
+        - Lowest Isolation Level.
+        - It is like peeking in a book while someone is still writing in it.
+        - Highest risk of inconsistent Data
+    - **Read Committed**
+        - It's like waiting for someone to finish the book before reading it.
+        - Chance of seeing inconsistent data if another transaction is still in progress
+    - **Repeatable Read**
+        - It’s like taking a photo of the book before reading it and sticking to that photo no matter what changes happen to the actual book.
+        - Prevent “Phantom Read” - Where new data is added by other transactions during the transaction’s execution
+    - **Serializable**
+        - Strictest Isolation Level.
+        - It’s like the transaction is happening in its own bubble, completely isolated from others until it’s done.
+        - Serializable isolation prevents all kinds of anomalies, including dirty reads, non-repeatable reads, and phantom reads.
+    
+    In Simple Terms, The **higher the isolation level, the more "alone" each transaction is**, reducing the chances of seeing inconsistent or incorrect data. 
+    
+    However, **higher isolation levels also typically come with higher performance overhead**.
+    
+
+### Security Problems
+
+So, in the University, we know that there are individuals like administrators, professors, and students. You want to give them access to data based on roles and privileges.
+
+#### File Based System
+
+In the File Based System, it becomes really difficult to give information based on roles and privileges. So, mostly Users have access to all the data, making it challenging to enforce fine-grained permissions and restrict unauthorized access to sensitive data.
+
+#### DBMS Solution
+
+DBMS enforces access control through user authentication, authorization, and privileges.
+
+Authentication verifies the identity of users through unique usernames and passwords.
+
+Authorization checks the user's role or permissions to determine their level of access.
+
+For example, an administrator may have full access to all data, while a professor may have restricted access to student enrollment records.
+
+In summary, file-processing systems suffer from data management challenges, whereas DBMS offers solutions to these issues by providing a centralized, structured, and secure approach to data storage and retrieval.
+
+## Conclusion
+
+In conclusion, DBMS revolutionized data management by addressing the limitations of the file-based system. Through features like data redundancy and inconsistency, difficulty in accessing data, integrity problems, concurrent-access anomalies, atomicity, data isolation, and security measures, DBMS ensures efficient and secure data handling, making it an indispensable tool in various industries and organizations.

@@ -12,11 +12,10 @@ export default function Home() {
       <section className="space-y-6 pb-8 pt-6 md:pb-12 md:mt-10 lg:py-32">
         <div className="container flex flex-col gap-4 text-center">
           <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-balance">
-            Hello, I&apos;m James
+            Hello, I&apos;m Kunal
           </h1>
           <p className="max-w-[42rem] mx-auto text-muted-foreground sm:text-xl text-balance">
-            Welcome to my blog template. Built using tailwind, shadcn, velite
-            and Nextjs 14.
+            Embark on Your Digital Nomad Journey: Unlock Indie Hacking Success with Blogs on Design, Software, SEO, and Beyond!
           </p>
           <div className="flex flex-col gap-4 justify-center sm:flex-row">
             <Link
